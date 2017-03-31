@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
-var Articles = require('../models/Articles.js')
-var Users = require('../models/Users.js')
+var Article = require('../models/Articles.js')
+var Comment = require('../models/Comments.js')
 var mongoose = require("mongoose")
 // Snatches HTML from URLs
 var request = require("request")
@@ -52,47 +52,17 @@ router.post("/submit", function (req, res) {
 });
 
 // This GET route let's us see the books we have added
-router.get("/books", function (req, res) {
-  // Using our Book model, "find" every book in our book db
-  Book
-    .find({}, function (error, doc) {
-      // Send any errors to the browser
-      if (error) {
-        res.send(error // Or send the doc to the browser
-        );
-      } else {
-        res.send(doc);
-      }
-    });
+router.get("/all", function (req, res) {
+  Article.find({}).populate('comments').exec(function (err, doc) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(doc);
+    }
+  });
 });
 
-// Route to see what our library data looks in the browser
-router.get("/library", function (req, res) {
-  // Find all of the entries of Library (there's only one, remember)
-  Library
-    .find({}, function (error, doc) {
-      if (error) {
-        res.send(error // Or send the doc to the browser
-        );
-      } else {
-        res.send(doc);
-      }
-    });
-});
 
-// Route to see what library looks like WITH populating
-router.get("/populated", function (req, res) {
-  Library
-    .find({})
-    .populate("books")
-    .exec(function (error, doc) {
 
-      if (error) {
-        res.send(error)
-      } else {
-        res.send(doc);
-      }
-    });
-});
 
 module.exports = router;

@@ -1,132 +1,78 @@
 var express = require('express')
 var router = express.Router()
-var Articles = require('../models/Articles.js')
-var Users = require('../models/Users.js')
+var Article = require('../models/Articles.js')
+var Comment = require('../models/Comments.js')
 var mongoose = require("mongoose")
 // Snatches HTML from URLs
 var request = require("request")
+var rp = require('request-promise');
 // Scrapes our HTML
 var cheerio = require("cheerio")
 
 //this is the users_controller.js file
 router.get('/', function (req, res) {
-  let reviewList = [];
-  request(`http://pitchfork.com/reviews/albums/`, function (error, response, html) {
+  rp(`http://pitchfork.com/reviews/albums/`, function (error, response, html) {
 
     // Load the HTML into cheerio
     var $ = cheerio.load(html);
 
     $('.review').each(function (i, element) {
-
-      var link = $(element)
-        .children()
-        .attr("href");
-      var artist = $(element)
-        .find('.artist-list')
-        .text();
-      var album = $(element)
-        .find('h2.title')
-        .text();
-      var artwork = $(element)
-        .find("img")
-        .attr("src");
-
-      reviewList.push({
+      let link = $(element).children().attr("href");
+      let artist = $(element).find('.artist-list').text();
+      let album = $(element).find('h2.title').text();
+      let artwork = $(element).find("img").attr("src");
+      
+      let reviewObj = {
         artist: artist,
         album: album,
-        link: "https://www.pitchfork.com" + link,
+        url: `http://www.pitchfork.com${link}`,
         artwork: artwork
-      });
+      }
+      let Review = new Article(reviewObj);
+
+      Article.find({album: reviewObj.album}).exec(function(err,doc) {
+        if (doc.length) {
+          console.log("Review already exists!")
+        } else {
+            Review.save(function (err,doc) {
+              if (err) {
+                res.send(err)
+              } else {
+                console.log("review inserted")
+              }
+            })
+        }
+      })
     });
-    let reviews = {
-      reviewsList: reviewList
-    }
-    res.json(reviews)
+  }).then(function() {
+      Article.find({}).populate('comments').exec(function(err,doc) {
+            if (err) {
+              res.send(err);
+            } else {
+              let reviewList = {
+                reviewList : doc
+              }
+              res.render('index', reviewList);
+            }
+          });
   })
-
-  // res.render('index');
 });
 
-// Routes ====== This POST route handles the creation of a new book in our
-// mongodb books collection
-router.post("/submit", function (req, res) {
+router.get('/:id', function(req,res){
+  let id = req.params.id;
+  let reviewUrl;
+    Article.find({_id: id}).exec(function(err,doc){
+      reviewUrl = doc[0].url
+      console.log(reviewUrl);
+      request(reviewUrl, function (error, response, html) {
+        let $ = cheerio.load(html);
+        let score = $('.score').html();
+        res.json(html);
+      });
+    })
+})
 
-  var newBook = new Book(req.body);
 
-  // Save the new book in the books collection
-  newBook.save(function (err, doc) {
-    // Send an error to the browser if there's something wrong
-    if (err) {
-      res.send(err // Otherwise...
-      );
-    } else {
 
-      // REMEMBER: doc is a variable containing the document of the book we just
-      // saved, so calling doc._id will grab the id of the doc, in this case, our new
-      // book ALSO: We need "{new: true}" in our call, or else our query will return
-      // the object as it was before it was updated
-      Library
-        .findOneAndUpdate({}, {
-          $push: {
-            "books": doc._id
-          }
-        }, {
-          new: true
-        }, function (error, doc) {
-          // Send any errors to the browser
-          if (error) {
-            res.send(error // Or send the doc to the browser
-            );
-          } else {
-            res.send(doc);
-          }
-        });
-    }
-  });
-});
-
-// This GET route let's us see the books we have added
-router.get("/books", function (req, res) {
-  // Using our Book model, "find" every book in our book db
-  Book
-    .find({}, function (error, doc) {
-      // Send any errors to the browser
-      if (error) {
-        res.send(error // Or send the doc to the browser
-        );
-      } else {
-        res.send(doc);
-      }
-    });
-});
-
-// Route to see what our library data looks in the browser
-router.get("/library", function (req, res) {
-  // Find all of the entries of Library (there's only one, remember)
-  Library
-    .find({}, function (error, doc) {
-      if (error) {
-        res.send(error // Or send the doc to the browser
-        );
-      } else {
-        res.send(doc);
-      }
-    });
-});
-
-// Route to see what library looks like WITH populating
-router.get("/populated", function (req, res) {
-  Library
-    .find({})
-    .populate("books")
-    .exec(function (error, doc) {
-
-      if (error) {
-        res.send(error)
-      } else {
-        res.send(doc);
-      }
-    });
-});
 
 module.exports = router;

@@ -37,7 +37,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static("public"));
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/week18");
+mongoose.connect("mongodb://localhost/week18hw_db");
 const db = mongoose.connection;
 
 // Show any mongoose errors

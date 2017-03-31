@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 // make BookSchema a Schema
-var BookSchema = new Schema({
+var CommentSchema = new Schema({
   // author: just a string
   name: {
     type: String
@@ -18,7 +18,7 @@ var BookSchema = new Schema({
 
 // NOTE: the book's id is stored automatically Our Library model will have an
 // array to store these ids Create the Book model with the BookSchema
-var Book = mongoose.model("User", BookSchema);
+var Comment = mongoose.model("Comments", CommentSchema);
 
 // Export the model so we can use it on our server file.
-module.exports = Book;
+module.exports = Comment;

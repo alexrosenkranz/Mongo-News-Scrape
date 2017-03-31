@@ -12,7 +12,15 @@ var ArticleSchema = new Schema({
   },
   // title: just a string
   album: {
-    type: String
+    type: String,
+    validate: {
+          validator: function(v, cb) {
+            Article.find({album: v}, function(err,docs){
+               cb(docs.length == 0);
+            });
+          },
+          message: 'Entry already exists!'
+        }
   },
   artwork: {
     type: String
@@ -25,7 +33,7 @@ comments : [
     // Store ObjectIds in the array
     type: Schema.Types.ObjectId,
     // The ObjectIds will refer to the ids in the Note model
-    ref: "Comment"
+    ref: "Comments"
   }
 ]
 });
