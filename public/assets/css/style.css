@@ -35,8 +35,10 @@ h1,h2,h3,h4,h5,h6{
 .sideways {
     transform: rotate(90deg);
     transform-origin: center;
-    font-size: 3.4rem;
+    font-size: 3.2rem;
     position: fixed;
-    top: 47vh;
-    right: -25vh;
+    top: 40vh;
+    right: -27vh;
+    color: #ff1744;
+    font-family: "junction", sans-serif;
 }

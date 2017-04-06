@@ -12,6 +12,13 @@ $(document).ready(function() {
       comment: commentBody,
       url: commentUrl,
     }
+
+    for(var prop in comment) {
+        if(comment.hasOwnProperty(prop))
+            return false;
+    }
+
+
     fetch('/api', {
       method: 'POST',
       headers: {
