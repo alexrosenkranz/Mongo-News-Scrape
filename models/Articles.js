@@ -14,13 +14,13 @@ var ArticleSchema = new Schema({
   album: {
     type: String,
     validate: {
-          validator: function(v, cb) {
-            Article.find({album: v}, function(err,docs){
-               cb(docs.length == 0);
-            });
-          },
-          message: 'Entry already exists!'
-        }
+      validator: function (v, cb) {
+        Article.find({ album: v }, function (err, docs) {
+          cb(docs.length === 0)
+        });
+      },
+      message: 'Entry already exists!'
+    }
   },
   artwork: {
     type: String
@@ -28,14 +28,18 @@ var ArticleSchema = new Schema({
   url: {
     type: String
   },
-comments : [
-  {
-    // Store ObjectIds in the array
-    type: Schema.Types.ObjectId,
-    // The ObjectIds will refer to the ids in the Note model
-    ref: "Comments"
-  }
-]
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  comments: [
+    {
+      // Store ObjectIds in the array
+      type: Schema.Types.ObjectId,
+      // The ObjectIds will refer to the ids in the Note model
+      ref: "Comments"
+    }
+  ]
 });
 
 // NOTE: the book's id is stored automatically Our Library model will have an

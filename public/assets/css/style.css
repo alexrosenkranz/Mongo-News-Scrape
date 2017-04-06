@@ -2,6 +2,7 @@ body {
   background-image: linear-gradient(to bottom, #cfd9df 0%, #e2ebf0 100%);
   background-attachment: fixed;
   font-family: "prociono",serif;
+  font-size: 16px;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -25,4 +26,17 @@ h1,h2,h3,h4,h5,h6{
 
 .card .card-image img {
   mix-blend-mode: multiply;
+}
+
+.end-mark {
+  display: none;
+}
+
+.sideways {
+    transform: rotate(90deg);
+    transform-origin: center;
+    font-size: 3.4rem;
+    position: fixed;
+    top: 47vh;
+    right: -25vh;
 }

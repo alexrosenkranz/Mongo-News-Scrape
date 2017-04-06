@@ -13,7 +13,11 @@ var CommentSchema = new Schema({
   // title: just a string
   comment: {
     type: String
-  }
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 // NOTE: the book's id is stored automatically Our Library model will have an

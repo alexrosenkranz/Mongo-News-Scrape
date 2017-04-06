@@ -8,19 +8,17 @@ var request = require("request")
 // Scrapes our HTML
 var cheerio = require("cheerio")
 
-//this is the users_controller.js file
-router.get('/', function (req, res) {
-  res.render('index');
-});
 
-// Routes ====== This POST route handles the creation of a new book in our
-// mongodb books collection
-router.post("/submit", function (req, res) {
-
-  var newBook = new Book(req.body);
+router.post("/", function (req, res) {
+  console.log(req.body);
+  let commentBody = {
+    name: req.body.name,
+    comment: req.body.comment
+  }
+  var newComment = new Comment(commentBody);
 
   // Save the new book in the books collection
-  newBook.save(function (err, doc) {
+  newComment.save(function (err, comment) {
     // Send an error to the browser if there's something wrong
     if (err) {
       res.send(err // Otherwise...
@@ -31,10 +29,9 @@ router.post("/submit", function (req, res) {
       // saved, so calling doc._id will grab the id of the doc, in this case, our new
       // book ALSO: We need "{new: true}" in our call, or else our query will return
       // the object as it was before it was updated
-      Library
-        .findOneAndUpdate({}, {
+      Article.findOneAndUpdate({'url': req.body.url}, {
           $push: {
-            "books": doc._id
+            "comments": comment._id
           }
         }, {
           new: true
@@ -44,25 +41,12 @@ router.post("/submit", function (req, res) {
             res.send(error // Or send the doc to the browser
             );
           } else {
-            res.send(doc);
+            res.json(comment);
           }
         });
     }
   });
 });
-
-// This GET route let's us see the books we have added
-router.get("/all", function (req, res) {
-  Article.find({}).populate('comments').exec(function (err, doc) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(doc);
-    }
-  });
-});
-
-
 
 
 module.exports = router;
