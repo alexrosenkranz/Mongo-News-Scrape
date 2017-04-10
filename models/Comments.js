@@ -1,28 +1,19 @@
-// Require mongoose
-var mongoose = require("mongoose");
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
-// Create a Schema class with mongoose
-var Schema = mongoose.Schema;
-
-// make BookSchema a Schema
 var CommentSchema = new Schema({
-  // author: just a string
   name: {
     type: String
   },
-  // title: just a string
   comment: {
     type: String
   },
   date: {
     type: Date,
     default: Date.now
-  },
-});
+  }
+})
 
-// NOTE: the book's id is stored automatically Our Library model will have an
-// array to store these ids Create the Book model with the BookSchema
-var Comment = mongoose.model("Comments", CommentSchema);
+var Comment = mongoose.model('Comments', CommentSchema)
 
-// Export the model so we can use it on our server file.
-module.exports = Comment;
+module.exports = Comment

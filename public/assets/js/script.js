@@ -1,23 +1,16 @@
-$(document).ready(function() {
+$(document).ready(function () {
+  $('.submit').on('click', function (e) {
+    e.preventDefault()
 
-  $('.submit').on('click', function(e){
-    e.preventDefault();
-
-    let commentName = $('.comment-name').val().trim();
-    let commentBody = $('.comment').val().trim();
-    let commentUrl = $('form').data('id').trim();
+    let commentName = $('.comment-name').val().trim()
+    let commentBody = $('.comment').val().trim()
+    let commentUrl = $('form').data('id').trim()
 
     let comment = {
       name: commentName,
       comment: commentBody,
-      url: commentUrl,
+      url: commentUrl
     }
-
-    // for(var prop in comment) {
-    //     if(comment.hasOwnProperty(prop))
-    //         return false;
-    // }
-
 
     fetch('/api', {
       method: 'POST',
@@ -26,26 +19,23 @@ $(document).ready(function() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(comment)
-  }).then(result => {
-    return result.json()
-  }).then(data => {
+    }).then(result => {
+      return result.json()
+    }).then(data => {
     // console.log(data);
-    let commentName = data.name
-    let commentBody = data.comment
+      let commentName = data.name
+      let commentBody = data.comment
 
-    let newCommentDiv = $('<div>').addClass('card-panel red lighten-2')
-    let newCommentBody = $('<p>').addClass('white-text').html(commentBody);
-    let newCommentName = $('<strong>').html(`Written by: ${commentName}`);
+      let newCommentDiv = $('<div>').addClass('card-panel red lighten-2')
+      let newCommentBody = $('<p>').addClass('white-text').html(commentBody)
+      let newCommentName = $('<strong>').html(`Written by: ${commentName}`)
 
-    newCommentDiv.append(newCommentBody).append(newCommentName)
+      newCommentDiv.append(newCommentBody).append(newCommentName)
 
-    $('.comment-container').append(newCommentDiv);
+      $('.comment-container').append(newCommentDiv)
+    })
+
+    $('.comment-name').val('')
+    $('.comment').val('')
   })
-    
-    $('.comment-name').val('');
-    $('.comment').val('');
-
-  })
-
-
 })

@@ -1,11 +1,8 @@
-// Require mongoose
-var mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
-// Create a Schema class with mongoose
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
-// make BookSchema a Schema
-var ArticleSchema = new Schema({
+const ArticleSchema = new Schema({
   // author: just a string
   artist: {
     type: String
@@ -15,9 +12,9 @@ var ArticleSchema = new Schema({
     type: String,
     validate: {
       validator: function (v, cb) {
-        Article.find({ album: v }, function (err, docs) {
+        Article.find({ album: v }, function (docs) {
           cb(docs.length === 0)
-        });
+        })
       },
       message: 'Entry already exists!'
     }
@@ -34,17 +31,12 @@ var ArticleSchema = new Schema({
   },
   comments: [
     {
-      // Store ObjectIds in the array
       type: Schema.Types.ObjectId,
-      // The ObjectIds will refer to the ids in the Note model
-      ref: "Comments"
+      ref: 'Comments'
     }
   ]
-});
+})
 
-// NOTE: the book's id is stored automatically Our Library model will have an
-// array to store these ids Create the Book model with the BookSchema
-var Article = mongoose.model("Article", ArticleSchema);
+const Article = mongoose.model('Article', ArticleSchema)
 
-// Export the model so we can use it on our server file.
-module.exports = Article;
+module.exports = Article
