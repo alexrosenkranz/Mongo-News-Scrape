@@ -13,10 +13,10 @@ $(document).ready(function() {
       url: commentUrl,
     }
 
-    for(var prop in comment) {
-        if(comment.hasOwnProperty(prop))
-            return false;
-    }
+    // for(var prop in comment) {
+    //     if(comment.hasOwnProperty(prop))
+    //         return false;
+    // }
 
 
     fetch('/api', {
@@ -29,7 +29,7 @@ $(document).ready(function() {
   }).then(result => {
     return result.json()
   }).then(data => {
-    console.log(data);
+    // console.log(data);
     let commentName = data.name
     let commentBody = data.comment
 

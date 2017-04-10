@@ -1,30 +1,24 @@
-/* Showing Mongoose's "Populated" Method (18.3.6)
- * INSTRUCTOR ONLY
- * =============================================== */
-
 // Dependencies
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-// Snatches HTML from URLs
 const request = require("request");
-// Scrapes our HTML
 const cheerio = require("cheerio");
 const exphbs = require('express-handlebars');
 
 mongoose.Promise = Promise;
 
+// Controllers
 const apiController = require("./controllers/apiController.js")
 const htmlController = require("./controllers/htmlController.js")
 
-// var Book = require("./models/Articles.js");
-// var Library = require("./models/Users.js");
 
 // Initialize Express
 const app = express();
-var PORT = process.env.PORT || 3000;
-var server_host = process.env.YOUR_HOST || '0.0.0.0';
+const PORT = process.env.PORT || 3000;
+const mongoUrl =  "mongodb://heroku_1356n3wt:n4rk164tur0sbvtca1k7sn2i6d@ds031895.mlab.com:31895/heroku_1356n3wt"
+const server_host = process.env.YOUR_HOST || '0.0.0.0';
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -38,7 +32,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Database configuration with mongoose
-mongoose.connect("mongodb://localhost/week18hw_db");
+mongoose.connect(mongoUrl);
 const db = mongoose.connection;
 
 // Show any mongoose errors
