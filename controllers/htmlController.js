@@ -45,7 +45,7 @@ router.get('/', function (req, res) {
     })
   }).then(function () {
     Article.find({}).populate('comments').sort({
-      date: 1
+      date: -1
     }).exec(function (err, doc) {
       if (err) {
         res.send(err)
