@@ -15,7 +15,7 @@ const htmlController = require('./controllers/htmlController.js')
 // Initialize Express
 const app = express()
 const PORT = process.env.PORT || 3000
-const mongoUrl = 'mongodb://heroku_1356n3wt:n4rk164tur0sbvtca1k7sn2i6d@ds031895.mlab.com:31895/heroku_1356n3wt'
+const mongoUrl = 'mongodb://localhost/pitchforkScrape'
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars')
@@ -29,7 +29,12 @@ app.use(bodyParser.json())
 app.use(express.static('public'))
 
 // Database configuration with mongoose
-mongoose.connect(mongoUrl)
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+} else {
+  mongoose.connect(mongoUrl)
+
+}
 const db = mongoose.connection
 
 // Show any mongoose errors

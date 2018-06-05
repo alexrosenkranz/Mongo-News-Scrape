@@ -10,14 +10,14 @@ const ArticleSchema = new Schema({
   // title: just a string
   album: {
     type: String,
-    validate: {
-      validator: function (v, cb) {
-        Article.find({ album: v }, function (docs) {
-          cb(docs.length === 0)
-        })
-      },
-      message: 'Entry already exists!'
-    }
+    // validate: {
+    //   validator: function (v, cb) {
+    //     Article.find({ album: v }, function (docs) {
+    //       cb(docs.length === 0)
+    //     })
+    //   },
+    //   message: 'Entry already exists!'
+    // }
   },
   artwork: {
     type: String
